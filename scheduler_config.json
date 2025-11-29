@@ -1,0 +1,31 @@
+{
+  "api_keys": {
+    "mastodon_access_token": "ENV_VARIABLE_USED",
+    "bluesky_app_password": "ENV_VARIABLE_USED",
+    "twitter_api_key": "ENV_VARIABLE_USED"
+  },
+  "settings": {
+    "log_level": "INFO",
+    "timezone": "America/Los_Angeles"
+  },
+  "scheduled_posts": [
+    {
+      "id": "post-001-mastodon",
+      "platform": "mastodon",
+      "time": "2025-12-01 10:00",
+      "content": "Excited to share the launch of my 'Unified Social Scheduler' project! It integrates Mastodon and BlueSky APIs into a single, cohesive deployment. #Automation #OpenSource"
+    },
+    {
+      "id": "post-002-bluesky",
+      "platform": "bluesky",
+      "time": "2025-12-01 11:30",
+      "content": "Bridging communications gaps is a system problem, not a people problem. Check out the Python code for this cross-platform scheduler on my GitHub. Designed for alignment. 🧵"
+    },
+    {
+      "id": "post-003-twitter",
+      "platform": "twitter",
+      "time": "2025-12-02 09:00",
+      "content": "Just dropped a new Python tool for unified social scheduling (Mastodon, BlueSky, X). Demonstrates secure API management and scheduled execution. #SystemsEngineering #APIAutomation"
+    }
+  ]
+}
