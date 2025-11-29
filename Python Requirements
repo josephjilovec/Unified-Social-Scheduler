@@ -1,6 +1,6 @@
-No external dependencies needed for the core simulated script,
+No external dependencies needed for the core test script,
 
-but a production script would likely need:
+A production script would need:
 
 requests
 
