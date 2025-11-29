@@ -1,0 +1,7 @@
+No external dependencies needed for the core simulated script,
+
+but a production script would likely need:
+
+requests
+
+python-dotenv
