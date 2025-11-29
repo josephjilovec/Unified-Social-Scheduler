@@ -8,7 +8,7 @@ This tool is a proof-of-concept for a centralized, custom-built social media man
 
 It demonstrates the ability to:
 
-Integrate with external APIs (simulated here for security and simplicity).
+Integrate with external APIs (simulated here for security and simplicity) for platforms like Mastodon, BlueSky, and Twitter/X.
 
 Manage structured data for complex schedules.
 
@@ -30,15 +30,13 @@ pip install -r requirements.txt
 
 
 Secure Configuration (MANDATORY):
-For security, API credentials must be set as environment variables.
+For security, API credentials must be set as environment variables. The following keys are required for the supported platforms:
 
 MASTODON_ACCESS_TOKEN
 
-BLUESKY_APP_PASSWORD (This is typically an application password, not a user password)
+BLUESKY_APP_PASSWORD
 
-TWITTER_API_KEY (Example placeholder)
-
-LINKEDIN_ACCESS_TOKEN (Example placeholder)
+TWITTER_API_KEY
 
 You can set these in your terminal (e.g., export MASTODON_ACCESS_TOKEN="your-token") or use a local .env file with a tool like python-dotenv.
 
