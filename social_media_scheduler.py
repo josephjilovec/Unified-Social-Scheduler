@@ -3,9 +3,11 @@ import time
 from datetime import datetime
 import os
 import sys
+from urllib import error, request
 
 # --- Configuration ---
 CONFIG_FILE = 'scheduler_config.json'
+XQUIK_TWEET_URL = os.environ.get('XQUIK_API_URL', 'https://xquik.com/api/v1/x/tweets')
 
 def load_schedule():
     """Loads the posting schedule from the configuration file."""
@@ -27,9 +29,60 @@ def get_api_key(platform):
         # BlueSky commonly uses an application password for bots/apps
         return os.environ.get('BLUESKY_APP_PASSWORD')
     elif platform == "twitter":
+        if get_twitter_backend() == "xquik":
+            return os.environ.get('XQUIK_API_KEY')
         # Placeholder for X/Twitter API
         return os.environ.get('TWITTER_API_KEY')
     return None
+
+def get_twitter_backend():
+    """Returns the configured Twitter/X posting backend."""
+    return os.environ.get('TWITTER_BACKEND', 'twitter').strip().lower()
+
+def format_xquik_success(response_data):
+    """Formats a concise result for accepted Xquik tweet requests."""
+    tweet_url = response_data.get('url')
+    if tweet_url:
+        return f"SUCCESS: Posted to Twitter/X via Xquik. URL: {tweet_url}"
+
+    write_action_id = response_data.get('writeActionId')
+    if write_action_id:
+        return f"SUCCESS: Xquik accepted the tweet for posting. Write action ID: {write_action_id}"
+
+    return "SUCCESS: Xquik accepted the tweet for posting."
+
+def post_to_xquik(content, api_key):
+    """Posts Twitter/X content through Xquik's REST API."""
+    account = os.environ.get('XQUIK_ACCOUNT')
+    if not account:
+        return "FAILURE: Missing XQUIK_ACCOUNT for Xquik Twitter/X posting."
+
+    payload = json.dumps({
+        "account": account,
+        "text": content,
+    }).encode("utf-8")
+
+    post_request = request.Request(
+        XQUIK_TWEET_URL,
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with request.urlopen(post_request, timeout=30) as response:
+            response_body = response.read().decode("utf-8")
+            response_data = json.loads(response_body) if response_body else {}
+            if response.getcode() in (200, 202):
+                return format_xquik_success(response_data)
+            return f"FAILURE: Xquik returned HTTP {response.getcode()}."
+    except error.HTTPError as exc:
+        return f"FAILURE: Xquik returned HTTP {exc.code}."
+    except error.URLError as exc:
+        return f"FAILURE: Could not reach Xquik. Error: {exc.reason}"
 
 def simulate_post(platform, content):
     """
@@ -42,23 +95,24 @@ def simulate_post(platform, content):
         # Crucial security failure mode: exit if key is missing
         return f"FAILURE: Missing API Key/Token for {platform}. Set the corresponding environment variable."
 
-    # Use a truncated key prefix for logging, demonstrating the key was loaded without exposing it
-    key_prefix = api_key[:5]
-
     if platform == "mastodon":
         # Mastodon API usage simulation (e.g., toot creation)
-        print(f"-> [MASTODON API] Authenticating using token prefix: {key_prefix}...")
+        print("-> [MASTODON API] Authenticating with configured token...")
         time.sleep(0.5)
         return f"SUCCESS: Tooted to Mastodon. Content: '{content[:50]}...'"
         
     elif platform == "bluesky":
         # BlueSky API usage simulation (e.g., creation of 'post')
-        print(f"-> [BLUESKY API] Authenticating with App Password prefix: {key_prefix}...")
+        print("-> [BLUESKY API] Authenticating with configured app password...")
         time.sleep(0.5)
         return f"SUCCESS: Posted to BlueSky. Content: '{content[:50]}...'"
 
     elif platform == "twitter":
-        print(f"-> [TWITTER/X API] Authenticating and sending tweet (Key prefix: {key_prefix})...")
+        if get_twitter_backend() == "xquik":
+            print("-> [XQUIK API] Sending Twitter/X post through Xquik...")
+            return post_to_xquik(content, api_key)
+
+        print("-> [TWITTER/X API] Authenticating and sending tweet...")
         time.sleep(0.5)
         return f"SUCCESS: Posted to Twitter/X. Content: '{content[:50]}...'"
         
