@@ -2,7 +2,9 @@
   "api_keys": {
     "mastodon_access_token": "ENV_VARIABLE_USED",
     "bluesky_app_password": "ENV_VARIABLE_USED",
-    "twitter_api_key": "ENV_VARIABLE_USED"
+    "twitter_api_key": "ENV_VARIABLE_USED",
+    "xquik_api_key": "ENV_VARIABLE_USED_WHEN_TWITTER_BACKEND_IS_XQUIK",
+    "xquik_account": "ENV_VARIABLE_USED_WHEN_TWITTER_BACKEND_IS_XQUIK"
   },
   "settings": {
     "log_level": "INFO",

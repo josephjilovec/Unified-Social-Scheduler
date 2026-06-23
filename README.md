@@ -8,7 +8,7 @@ This tool is a proof-of-concept for a centralized, custom-built social media man
 
 It demonstrates the ability to:
 
-Integrate with external APIs (simulated here for security and simplicity) for platforms like Mastodon, BlueSky, and Twitter/X.
+Integrate with external APIs for platforms like Mastodon, BlueSky, and Twitter/X.
 
 Manage structured data for complex schedules.
 
@@ -16,7 +16,7 @@ Execute time-based, mission-critical tasks (posting on schedule).
 
 Securely handle credentials using environment variables.
 
-The goal is to move clients off costly, generic tools and onto bespoke, automated systems that run cleaner and faster—the definition of an "aligned organism."
+The goal is to move clients off costly, generic tools and onto bespoke, automated systems that run cleaner and faster - the definition of an "aligned organism."
 
 🛠️ Setup Instructions
 
@@ -37,6 +37,16 @@ MASTODON_ACCESS_TOKEN
 BLUESKY_APP_PASSWORD
 
 TWITTER_API_KEY
+
+Optional Twitter/X backend:
+
+TWITTER_BACKEND=xquik
+
+XQUIK_API_KEY
+
+XQUIK_ACCOUNT
+
+When TWITTER_BACKEND is set to xquik, Twitter/X posts are sent through Xquik's REST API instead of the simulated Twitter/X API path.
 
 You can set these in your terminal (e.g., export MASTODON_ACCESS_TOKEN="your-token") or use a local .env file with a tool like python-dotenv.
 
